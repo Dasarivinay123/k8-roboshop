@@ -1,49 +1,47 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: mongodb
+  name: redis
   namespace: roboshop
   # labels related to deployment resource
   labels:
     project: roboshop
     tier: db
-    component: mongodb
+    component: redis
 spec:
   replicas: 1
   selector:
     matchLabels:
       project: roboshop
       tier: db
-      component: mongodb
+      component: redis
   # Pod
   template:
     metadata:
       labels:
         project: roboshop
         tier: db
-        component: mongodb
+        component: redis
     spec:
       containers:
-      - name: mongodb
-        image: dasarivinay/mongodb:4.0.0
+      - name: redis
+        image: redis:7
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: mongodb
+  name: redis
   namespace: roboshop
-  # servicer labels
   labels:
     project: roboshop
     tier: db
-    component: mongodb
+    component: redis
 spec:
-  # Service uses the below labels to select the pods
   selector:
     project: roboshop
     tier: db
-    component: mongodb
+    component: redis
   ports:
     - protocol: TCP
-      port: 27017 # service port
-      targetPort: 27017 # container port
+      port: 6379 # service port
+      targetPort: 6379 # container port
